@@ -9,6 +9,14 @@ def movie_with_id(_, info, _id):
                 return movie
 
 
+def actor_with_id(_, info, _id):
+    with open('{}/data/actors.json'.format("."), "r") as file:
+        actors = json.load(file)
+        for actor in actors['actors']:
+            if actor['id'] == _id:
+                return actor
+
+
 def update_movie_rate(_, info, _id, _rate):
     new_movies = {}
     new_movie = {}
