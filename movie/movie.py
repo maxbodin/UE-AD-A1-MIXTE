@@ -13,13 +13,15 @@ type_defs = load_schema_from_path('movie.graphql')
 query = QueryType()
 mutation = MutationType()
 movie = ObjectType('Movie')
+actor = ObjectType('Actor')
 
 # Association du resolver à la requête associée dans le schéma.
 query.set_field('movie_with_id', r.movie_with_id)
 mutation.set_field('update_movie_rate', r.update_movie_rate)
+movie.set_field('actors', r.resolve_actors_in_movie)
 
 # Création du schéma dit exécutable avec les éléments précédents.
-schema = make_executable_schema(type_defs, movie, query, mutation)
+schema = make_executable_schema(type_defs, movie, query, mutation, actor)
 
 
 @app.route("/", methods=['GET'])
