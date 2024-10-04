@@ -22,3 +22,10 @@ def update_movie_rate(_, info, _id, _rate):
     with open('{}/data/movies.json'.format("."), "w") as write_file:
         json.dump(new_movies, write_file)
     return new_movie
+
+
+def resolve_actors_in_movie(movie, info):
+    with open('{}/data/actors.json'.format("."), "r") as file:
+        actors = json.load(file)
+        result = [actor for actor in actors['actors'] if movie['id'] in actor['films']]
+        return result
