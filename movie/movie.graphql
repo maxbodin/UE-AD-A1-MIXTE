@@ -11,4 +11,13 @@ type Movie {
     title: String!
     director: String!
     rating: Float!
+    actors: [Actor]
+}
+
+type Actor {
+    id: String!
+    firstname: String!
+    lastname: String!
+    birth_year: Int!
+    films: [String!]
 }
