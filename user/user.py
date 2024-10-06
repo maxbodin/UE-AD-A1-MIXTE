@@ -5,12 +5,12 @@ import json
 from werkzeug.exceptions import NotFound
 
 # CALLING gRPC requests
-import grpc
-from concurrent import futures
-import booking_pb2
-import booking_pb2_grpc
-import movie_pb2
-import movie_pb2_grpc
+# import grpc
+# from concurrent import futures
+# import booking_pb2
+# import booking_pb2_grpc
+# import movie_pb2
+# import movie_pb2_grpc
 
 # CALLING GraphQL requests
 # todo to complete
