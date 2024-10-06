@@ -2,7 +2,7 @@ from ariadne import graphql_sync, make_executable_schema, load_schema_from_path,
 from flask import Flask, request, jsonify, make_response
 
 import resolvers as r
-from constants import HOST, MOVIE_PORT
+from constants import MOVIE_PORT, HOST
 
 app = Flask(__name__)
 
@@ -15,11 +15,24 @@ mutation = MutationType()
 movie = ObjectType('Movie')
 actor = ObjectType('Actor')
 
-# Association du resolver à la requête associée dans le schéma.
+# RESOLVER -> MOVIES
+query.set_field('movies', r.movies)
 query.set_field('movie_with_id', r.movie_with_id)
+query.set_field('movies_with_director', r.movies_with_director)
+query.set_field('movies_with_actor', r.movies_with_actor)
+query.set_field('movies_above_rating', r.movies_above_rating)
+query.set_field('movie_with_title_exact', r.movie_with_title_exact)
+query.set_field('movies_with_title_contains', r.movie_with_title_contains)
+query.set_field('top_movies_by_director', r.top_movies_by_director)
+
+# RESOLVER -> ACTORS
+query.set_field('actors', r.actors)
 query.set_field('actor_with_id', r.actor_with_id)
+query.set_field('actor_film_count', r.actor_film_count)
+query.set_field('actors_by_lastname', r.actors_by_lastname)
+query.set_field('actors_in_movie', r.actors_in_movie)
+
 mutation.set_field('update_movie_rate', r.update_movie_rate)
-movie.set_field('actors', r.resolve_actors_in_movie)
 
 # Création du schéma dit exécutable avec les éléments précédents.
 schema = make_executable_schema(type_defs, movie, query, mutation, actor)

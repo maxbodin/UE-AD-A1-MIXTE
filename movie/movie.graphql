@@ -1,6 +1,17 @@
 type Query {
+    movies:[Movie!]
     movie_with_id(_id: String!): Movie
+    movies_with_director(director: String!):[Movie]
+    movies_with_actor(actor_id: String!): [Movie]
+    movies_above_rating(rating: Float!):[Movie]
+    movie_with_title_exact(title: String!):Movie
+    movies_with_title_contains(title: String!):[Movie]
+    top_movies_by_director(director: String!, count: Int!): [Movie]
+    actors:[Actor!]
     actor_with_id(_id: String!): Actor
+    actor_film_count(id: String!): Int!
+    actors_by_lastname(lastname: String!): [Actor]
+    actors_in_movie(movie_id: String!): [Actor]
 }
 
 type Mutation {
