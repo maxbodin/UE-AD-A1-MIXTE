@@ -2,7 +2,6 @@
 import json
 import requests
 from flask import Flask, request, jsonify, make_response
-from constants import HOST, USER_PORT, BOOKING_PORT, MOVIE_PORT
 
 # CALLING gRPC requests
 # import grpc
@@ -52,7 +51,7 @@ def add_user(userid):
 
 
 def write(all_users):
-    with open('{}/databases/users.json'.format("."), 'w') as f:
+    with open('{}/data/users.json'.format("."), 'w') as f:
         movies_dict = {'users': all_users}
         json.dump(movies_dict, f)
 
@@ -185,5 +184,5 @@ def movie_help():
 
 
 if __name__ == "__main__":
-    print("Server running in port %s" % USER_PORT)
-    app.run(host=HOST, port=USER_PORT)
+    print("Server running in port %s" % 3004)
+    app.run(host="0.0.0.0", port=3004)

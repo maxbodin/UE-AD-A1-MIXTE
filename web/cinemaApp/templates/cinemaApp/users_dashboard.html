@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Utilisateurs</title>
+</head>
+<body>
+    <h1>Liste des Utilisateurs</h1>
+    {% if error %}
+        <p style="color: red;">Error: {{ error }}</p>
+    {% endif %}
+
+    <!-- Barre de recherche -->
+    <form method="post" style="margin-bottom: 20px;">
+        {% csrf_token %}
+        <input type="text" name="search_query" placeholder="Rechercher un utilisateur..." value="{{ request.POST.search_query }}">
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <!-- Afficher les résultats de la recherche si disponibles -->
+    {% if search_result %}
+        <h2>Résultats de la recherche :</h2>
+            <a href="{% url 'user_detail' search_result.id %}">{{ search_result.name }}</a>
+    {% endif %}
+    <hr>
+
+    {% if users %}
+        <ul>
+        {% for user in users %}
+            <li><a href="{% url 'user_detail' user.id %}">{{ user.name }} - {{ user.id}}</a></li> <!-- Modifiez selon les attributs de votre client -->
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun utilisateur trouvé.</p>
+    {% endif %}
+    <a href="{% url 'add_user' %}">
+        <button>Add User</button>
+    </a>
+</body>
+</html>
