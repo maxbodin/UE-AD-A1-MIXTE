@@ -11,7 +11,12 @@ message ShowtimeDate {
 
 message ShowtimeData {
     string date = 1;
-    repeated string movies = 2;
+    repeated MovieData movies = 2;
+}
+
+message MovieData {
+    string movie = 1;
+    int32 seats = 2;
 }
 
 message Empty {}
