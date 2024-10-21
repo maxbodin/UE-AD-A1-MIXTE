@@ -10,7 +10,6 @@ def index(request):
 
 def list_users_view(request):
     all_users = call_rest_service(3004, 'users', 'GET')
-    
     search_result = ""
 
     if request.method == 'POST':
