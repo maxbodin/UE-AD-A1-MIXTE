@@ -2,7 +2,6 @@ from ariadne import graphql_sync, make_executable_schema, load_schema_from_path,
 from flask import Flask, request, jsonify, make_response
 
 import resolvers as r
-from constants import MOVIE_PORT, HOST
 
 app = Flask(__name__)
 
@@ -58,5 +57,5 @@ def graphql_server():
 
 
 if __name__ == "__main__":
-    print("Server running in port %s" % MOVIE_PORT)
-    app.run(host=HOST, port=MOVIE_PORT)
+    print("Server running in port %s" % 3001)
+    app.run(host="0.0.0.0", port=3001)

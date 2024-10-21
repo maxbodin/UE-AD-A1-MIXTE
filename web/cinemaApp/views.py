@@ -1,6 +1,8 @@
 import time
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+
+from .clients.graphQL import call_graphql_service
 from .clients.REST import call_rest_service
 
 
@@ -8,6 +10,7 @@ from .clients.REST import call_rest_service
 def index(request):
     return render(request, 'cinemaApp/home.html')
 
+# USERS
 def list_users_view(request):
     all_users = call_rest_service(3004, 'users', 'GET')
     search_result = ""
@@ -74,3 +77,39 @@ def add_user_view(request):
 
     # If GET request, render the form template
     return render(request, 'cinemaApp/add_user.html')
+
+# MOVIES
+def list_movies_view(request): 
+    request_body = """
+        {
+            movies {
+                id
+                title
+            }
+        }
+    """
+    all_movies = call_graphql_service(port=3001, query=request_body)
+    all_movies = all_movies.json()
+    return render(request, 'cinemaApp/movies_dashboard.html', {'movies': all_movies['data']['movies']})
+
+def movie_detail_view(request, id):
+    request_body = f"""
+        {{
+            movie_with_id(_id: "{id}") {{
+                id
+                title
+                director
+                rating
+                actors {{
+                    id
+                    firstname
+                    lastname
+                    birth_year
+                    films
+                }}
+            }}
+        }}
+    """
+    movie = call_graphql_service(port=3001, query=request_body)
+    movie = movie.json()
+    return render(request, 'cinemaApp/movie_dashboard.html', {'movie': movie['data']['movie_with_id']})

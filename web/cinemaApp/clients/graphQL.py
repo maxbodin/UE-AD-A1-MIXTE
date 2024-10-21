@@ -1,13 +1,9 @@
-from gql import gql, Client
-from gql.transport.requests import RequestsHTTPTransport
-from con
+import requests
 
-def call_graphql_service(port, query, variables=None):
-    transport = RequestsHTTPTransport(
-        url = f'http://localhost:{port}/graphql',
-        use_json=True,
-    )
+def call_graphql_service(port, query, variables=None, headers=None):
+    url = f'http://localhost:{port}/graphql'  # Complete URL for the REST service
+    headers = headers or {}
 
-    client = Client(transport=transport, fetch_schema_from_transport=True)
-    response = client.execute(gql(query), variable_values=variables)
+    response = requests.post(url=url, json={"query": query, "variables": variables}, headers=headers) 
+    
     return response
