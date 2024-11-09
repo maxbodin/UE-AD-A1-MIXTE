@@ -41,7 +41,7 @@ def list_users_view(request):
 def user_detail_view(request, id):
     user = call_rest_service(3004, f'users/{id}', 'GET')
     bookings = call_rest_service(3004, f'bookings/{id}', 'GET')
-    return render(request, 'cinemaApp/user_dashboard.html', {'user': user})
+    return render(request, 'cinemaApp/user.html', {'user': user})
 
 def delete_user_view(request, id):
     # Make a DELETE request to the REST service to delete the user
@@ -50,7 +50,7 @@ def delete_user_view(request, id):
     # Handle cases where there is an error
     if isinstance(response, dict) and response.get('error'):
         # If there is an error, render the user_detail template with the error
-        return render(request, 'cinemaApp/user_detail.html', {'user': {'id': id}, 'error': response['error']})
+        return render(request, 'cinemaApp/user.html', {'user': {'id': id}, 'error': response['error']})
     
     # Redirect to the users list page after successful deletion
     return redirect('users_list')
