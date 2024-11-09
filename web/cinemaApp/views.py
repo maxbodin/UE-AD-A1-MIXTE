@@ -57,7 +57,7 @@ def delete_user_view(request, id):
 
 def add_user_view(request):
     if request.method == 'POST':
-        # Get form data
+        
         name = request.POST.get('name')
         
         if not name:
@@ -88,9 +88,36 @@ def list_movies_view(request):
             }
         }
     """
-    all_movies = call_graphql_service(port=3001, query=request_body)
-    all_movies = all_movies.json()
-    return render(request, 'cinemaApp/movies_dashboard.html', {'movies': all_movies['data']['movies']})
+    all_movies = call_graphql_service(port=3001, query=request_body).json()
+    
+    search_result = []
+    if request.method == 'POST':
+        search_query = request.POST.get('search_query', '').strip()
+        
+        if search_query:
+            request_body = f"""
+                {{
+                    movies_with_title_contains(title: "{search_query}") {{
+                        id
+                        title
+                    }}
+                }}
+            """
+            search_result = call_graphql_service(port=3001, query=request_body).json()
+            
+            # Check for errors in response
+            if isinstance(search_result, dict) and search_result.get('errors'):
+                return render(request, 'cinemaApp/users_dashboard.html', {
+                    'movies': all_movies['data']['movies'],
+                    'error': search_result['errors'],
+                    'search_result': []
+                })
+            search_result = search_result.get('data', {}).get('movies_with_title_contains', [])
+
+    return render(request, 'cinemaApp/movies.html', {
+        'movies': all_movies['data']['movies'],
+        'search_result': search_result
+    })
 
 def movie_detail_view(request, id):
     request_body = f"""
@@ -112,4 +139,5 @@ def movie_detail_view(request, id):
     """
     movie = call_graphql_service(port=3001, query=request_body)
     movie = movie.json()
-    return render(request, 'cinemaApp/movie_dashboard.html', {'movie': movie['data']['movie_with_id']})
+    
+    return render(request, 'cinemaApp/movie.html', {'movie': movie['data']['movie_with_id']})
