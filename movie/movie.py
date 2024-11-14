@@ -28,7 +28,7 @@ query.set_field('top_movies_by_director', r.top_movies_by_director)
 query.set_field('actors', r.actors)
 query.set_field('actor_with_id', r.actor_with_id)
 query.set_field('actor_film_count', r.actor_film_count)
-query.set_field('actors_by_lastname', r.actors_by_lastname)
+query.set_field('actors_by_lastname_contains', r.actors_by_lastname_contains)
 query.set_field('actors_in_movie', r.actors_in_movie)
 
 mutation.set_field('update_movie_rate', r.update_movie_rate)
@@ -50,7 +50,6 @@ def graphql_server():
         schema,
         data,
         context_value=None,
-        debug=app.debug
     )
     status_code = 200 if success else 400
     return jsonify(result), status_code

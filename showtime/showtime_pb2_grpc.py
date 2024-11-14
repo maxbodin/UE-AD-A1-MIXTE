@@ -3,6 +3,7 @@
 import grpc
 import warnings
 
+import common_pb2 as common__pb2
 import showtime_pb2 as showtime__pb2
 
 GRPC_GENERATED_VERSION = '1.66.1'
@@ -37,12 +38,12 @@ class ShowtimeStub(object):
         self.GetShowtimeByDate = channel.unary_unary(
                 '/Showtime/GetShowtimeByDate',
                 request_serializer=showtime__pb2.ShowtimeDate.SerializeToString,
-                response_deserializer=showtime__pb2.ShowtimeData.FromString,
+                response_deserializer=common__pb2.ShowtimeData.FromString,
                 _registered_method=True)
         self.GetShowtimes = channel.unary_stream(
                 '/Showtime/GetShowtimes',
-                request_serializer=showtime__pb2.Empty.SerializeToString,
-                response_deserializer=showtime__pb2.ShowtimeData.FromString,
+                request_serializer=common__pb2.Empty.SerializeToString,
+                response_deserializer=common__pb2.ShowtimeData.FromString,
                 _registered_method=True)
 
 
@@ -67,12 +68,12 @@ def add_ShowtimeServicer_to_server(servicer, server):
             'GetShowtimeByDate': grpc.unary_unary_rpc_method_handler(
                     servicer.GetShowtimeByDate,
                     request_deserializer=showtime__pb2.ShowtimeDate.FromString,
-                    response_serializer=showtime__pb2.ShowtimeData.SerializeToString,
+                    response_serializer=common__pb2.ShowtimeData.SerializeToString,
             ),
             'GetShowtimes': grpc.unary_stream_rpc_method_handler(
                     servicer.GetShowtimes,
-                    request_deserializer=showtime__pb2.Empty.FromString,
-                    response_serializer=showtime__pb2.ShowtimeData.SerializeToString,
+                    request_deserializer=common__pb2.Empty.FromString,
+                    response_serializer=common__pb2.ShowtimeData.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -101,7 +102,7 @@ class Showtime(object):
             target,
             '/Showtime/GetShowtimeByDate',
             showtime__pb2.ShowtimeDate.SerializeToString,
-            showtime__pb2.ShowtimeData.FromString,
+            common__pb2.ShowtimeData.FromString,
             options,
             channel_credentials,
             insecure,
@@ -127,8 +128,8 @@ class Showtime(object):
             request,
             target,
             '/Showtime/GetShowtimes',
-            showtime__pb2.Empty.SerializeToString,
-            showtime__pb2.ShowtimeData.FromString,
+            common__pb2.Empty.SerializeToString,
+            common__pb2.ShowtimeData.FromString,
             options,
             channel_credentials,
             insecure,

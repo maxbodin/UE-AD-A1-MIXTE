@@ -10,7 +10,7 @@ type Query {
     actors:[Actor!]
     actor_with_id(_id: String!): Actor
     actor_film_count(id: String!): Int!
-    actors_by_lastname(lastname: String!): [Actor]
+    actors_by_lastname_contains(lastname: String!): [Actor]
     actors_in_movie(movie_id: String!): [Actor]
 }
 

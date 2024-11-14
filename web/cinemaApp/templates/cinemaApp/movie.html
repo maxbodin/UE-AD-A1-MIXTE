@@ -17,6 +17,14 @@
                 </li>
             </ul>
         </section>
+        <section>
+            <h2>Casting</h2>
+            <ul>
+                {% for actor in actors %}
+                    <li>{{ actor.firstname }} {{ actor.lastname }}</li>
+                {% endfor %}
+            </ul>
+        </section>
     </main>
 </body>
 </html>

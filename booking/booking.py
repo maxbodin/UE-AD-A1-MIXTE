@@ -4,7 +4,7 @@ import booking_pb2
 import booking_pb2_grpc
 import json
 
-BOOKING_PORT = 3002
+BOOKING_PORT = 3005
 
 
 class BookingServicer(booking_pb2_grpc.BookingServicer):
@@ -12,8 +12,10 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
     def __init__(self):
         with open('{}/data/bookings.json'.format("."), "r") as jsf:
             self.db = json.load(jsf)["bookings"]
+        print("Server started")
 
     def GetAllBookings(self, request, context):
+        print("GET ALL BOOKINGS")
         for booking in self.db:
             datesList = []
 
@@ -39,6 +41,9 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
             )
 
     def GetBookingsOfUser(self, request, context):
+        print("GET BOOKINGS OF USER")
+        print(self.db)
+        print(request.id)
         for booking in self.db:
             if booking["userid"] == request.id:
                 datesList = []
@@ -73,7 +78,7 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     booking_pb2_grpc.add_BookingServicer_to_server(BookingServicer(), server)
-    server.add_insecure_port(f'[::]:{BOOKING_PORT}')
+    server.add_insecure_port(f'[::]:3005')
     server.start()
     server.wait_for_termination()
 

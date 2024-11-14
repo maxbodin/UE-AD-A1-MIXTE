@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "common.proto";
 
 service Showtime {
     rpc GetShowtimeByDate(ShowtimeDate) returns (ShowtimeData) {}
@@ -8,15 +9,3 @@ service Showtime {
 message ShowtimeDate {
     string date = 1;
 }
-
-message ShowtimeData {
-    string date = 1;
-    repeated MovieData movies = 2;
-}
-
-message MovieData {
-    string movie = 1;
-    int32 seats = 2;
-}
-
-message Empty {}

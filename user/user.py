@@ -33,6 +33,7 @@ def get_user(id_or_name):
     for user in users:
         if user['id'] == id_or_name or user['name'].lower() == id_or_name.lower():
             return make_response(jsonify(user), 200)
+        
     return jsonify({"error": "User not found"}), 404
 
 
@@ -97,7 +98,7 @@ def get_user_bookings(userid):
         return jsonify({"error": "User not found"}), 404
 
     user_id = selected_user['id']
-    booking_service_url = f'http://{HOST}:{BOOKING_PORT}/bookings/{user_id}'
+    booking_service_url = f'http://localhost:3002/bookings/{user_id}'
 
     try:
         response = requests.get(booking_service_url)
@@ -183,6 +184,6 @@ def movie_help():
     return jsonify(endpoints), 200
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  
     print("Server running in port %s" % 3004)
     app.run(host="0.0.0.0", port=3004)

@@ -111,7 +111,7 @@ def actor_film_count(_, info, _id):
     return 0
 
 
-def actors_by_lastname(_, info, lastname):
+def actors_by_lastname_contains(_, info, lastname):
     selected_actors = []
     with open("./data/actors.json", "r") as file:
         all_actors = json.load(file)
@@ -122,21 +122,13 @@ def actors_by_lastname(_, info, lastname):
 
 
 def actors_in_movie(_, info, movie_id):
-    with open("./data/movies.json", "r") as movie_file:
-        all_movies = json.load(movie_file)
-        movie_actors = []
-        for movie in all_movies.get("movies", []):
-            if movie["title"].lower() == movie_id.lower():
-                movie_actors = movie.get("actors", [])
-                break
-
+    print("ACTORS_IN_MOVIE")
     selected_actors = []
-    if movie_actors:
-        with open("./data/actors.json", "r") as actor_file:
-            all_actors = json.load(actor_file)
-            for actor in all_actors.get("actors", []):
-                if actor["id"] in movie_actors:
-                    selected_actors.append(actor)
+    with open("./data/actors.json", "r") as actor_file:
+        actors = json.load(actor_file)
+        for actor in actors["actors"]:
+            if movie_id in actor["films"]:
+                selected_actors.append(actor)
 
     return selected_actors
 

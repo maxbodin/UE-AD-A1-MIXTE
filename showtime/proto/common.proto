@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message Empty {}
+
+message ShowtimeData {
+    string date = 1;
+    repeated string movies = 2;
+}

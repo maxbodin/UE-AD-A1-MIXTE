@@ -1,13 +1,15 @@
 import time
+import sys
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from .clients.graphQL import call_graphql_service
-from .clients.REST import call_rest_service
-
+from cinemaApp.clients.graphql_service import call_graphql_service
+from cinemaApp.clients.rest_service import call_rest_service
+from cinemaApp.clients.grpc_service import call_grpc_service
 
 
 def index(request):
+    search_result = ""
     return render(request, 'cinemaApp/home.html')
 
 # USERS
@@ -40,8 +42,10 @@ def list_users_view(request):
 
 def user_detail_view(request, id):
     user = call_rest_service(3004, f'users/{id}', 'GET')
-    bookings = call_rest_service(3004, f'bookings/{id}', 'GET')
-    return render(request, 'cinemaApp/user.html', {'user': user})
+    print("BOOKINGS")
+    bookings = call_grpc_service('localhost:3005', 'GetBookingsOfUser', userId=id)
+    print(bookings)
+    return render(request, 'cinemaApp/user.html', {'user': user, 'bookings': bookings})
 
 def delete_user_view(request, id):
     # Make a DELETE request to the REST service to delete the user
@@ -127,17 +131,42 @@ def movie_detail_view(request, id):
                 title
                 director
                 rating
-                actors {{
-                    id
-                    firstname
-                    lastname
-                    birth_year
-                    films
-                }}
             }}
         }}
     """
     movie = call_graphql_service(port=3001, query=request_body)
     movie = movie.json()
     
-    return render(request, 'cinemaApp/movie.html', {'movie': movie['data']['movie_with_id']})
+    request_body = f"""
+        {{
+            actors_in_movie(movie_id: "{id}") {{
+                id
+                firstname
+                lastname
+                birth_year
+            }}
+        }}
+    """
+    actors = call_graphql_service(port=3001, query=request_body)
+    actors = actors.json()
+    
+    return render(request, 'cinemaApp/movie.html', {'movie': movie['data']['movie_with_id'], 'actors': actors['data']['actors_in_movie']})
+
+# SHOWTIMES
+def showtimes_view(request):
+    request_body = """
+        {
+            showtimes {
+                id
+                date
+                movies {
+                    id
+                    title
+                }
+            }
+        }
+    """
+    showtimes = call_graphql_service(port=3002, query=request_body)
+    showtimes = showtimes.json()
+    
+    return render(request, 'cinemaApp/showtimes.html', {'showtimes': showtimes['data']['showtimes']})

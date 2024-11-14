@@ -4,8 +4,6 @@ import showtime_pb2
 import showtime_pb2_grpc
 import json
 
-from constants import SHOWTIME_PORT
-
 
 class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
 
@@ -28,7 +26,7 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     showtime_pb2_grpc.add_ShowtimeServicer_to_server(ShowtimeServicer(), server)
-    server.add_insecure_port(f'[::]:{SHOWTIME_PORT}')
+    server.add_insecure_port('[::]:3003')   
     server.start()
     server.wait_for_termination()
 

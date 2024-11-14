@@ -23,6 +23,10 @@
             {
               "movieid": "267eedb8-0f5d-42d5-8f43-72426b9fb3e6",
               "seatsBooked": 4
+            },
+            {
+              "movieid": "7daf7208-be4d-4944-a3ae-c1c2f516f3e6",
+              "seatsBooked": 3
             }
           ]
         },

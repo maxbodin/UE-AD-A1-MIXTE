@@ -18,3 +18,13 @@
 cd web
 python3 manage.py runserver
 ```
+
+# Actualiser les contrats gRPC
+Ajouter les fichiers .proto dans `web/cinemaApp/clients/protos`
+```bash
+cd web/cinemaApp/clients
+pip install -r requirements.txt # IF NECESSARY
+python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. common.proto
+python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. booking.proto
+python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. showtime.proto
+```
