@@ -13,7 +13,7 @@
 - Comprendre les concepts de développements de micro-services et apprendre à utiliser trois types d’API.
 
 
-# Installer les dépendances
+# Installer les dépendances 
 ```bash
 source venv/bin/activate
 pip install -r requirements.txt
