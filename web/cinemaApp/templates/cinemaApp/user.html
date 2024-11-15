@@ -16,7 +16,12 @@
     <h3>Historique des réservations</h3>
     <ul>
         {% for date in bookings %}
-            <li>{{ date.date }} - {{ date.movie }}</li>
+            <li>{{ date.date }}</li>
+            {% for movieBooked in date.movies %}
+                <div>
+                    {{ movieBooked }} - {{ movieBooked }} minutes
+                </div>
+            {% endfor %}
         {% endfor %}
     <br>
     <br>

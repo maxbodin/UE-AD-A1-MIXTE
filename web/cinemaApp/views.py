@@ -44,7 +44,10 @@ def user_detail_view(request, id):
     user = call_rest_service(3004, f'users/{id}', 'GET')
     print("BOOKINGS")
     bookings = call_grpc_service('localhost:3005', 'GetBookingsOfUser', userId=id)
-    print(bookings)
+    for booking in bookings:
+        booking['date'] = time.strftime('%d %B %Y', time.localtime(int(booking['date'])))
+        for movie in booking['movies']:
+            movie['movie'] = call_graphql_service(3001, f"{{ movie_with_id(_id: \"{movie['movieId']}\") {{ title }} }}").json()['data']['movie_with_id']['title']
     return render(request, 'cinemaApp/user.html', {'user': user, 'bookings': bookings})
 
 def delete_user_view(request, id):
