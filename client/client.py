@@ -55,7 +55,7 @@ def run():
         print("-------------- GetShowtimes --------------")
         get_showtimes(stub)
         
-    with grpc.insecure_channel(f'localhost:3005') as channel:
+    with grpc.insecure_channel(f'localhost:3004') as channel:
         stub = booking_pb2_grpc.BookingStub(channel)
 
         print("-------------- GetAllBookings --------------")
