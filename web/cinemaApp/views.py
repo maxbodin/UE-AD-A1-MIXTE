@@ -1,5 +1,7 @@
+import json
 import time
 import sys
+import uuid
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
@@ -154,6 +156,123 @@ def movie_detail_view(request, id):
     actors = actors.json()
     
     return render(request, 'cinemaApp/movie.html', {'movie': movie['data']['movie_with_id'], 'actors': actors['data']['actors_in_movie']})
+
+def add_movie_view(request):
+    all_actors = call_graphql_service(port=3001, query="{ actors { id firstname lastname } }").json()
+    if request.method == 'POST':
+        
+        # ADD MOVIE
+        title = request.POST.get('title')
+        director = request.POST.get('director')
+        rating = 5
+        actors = request.POST.getlist('actors')
+        actors_json = json.dumps(actors)  
+        
+        if not title or not director:
+            return render(request, 'cinemaApp/add_movie.html', {'error': "All fields should be defined"})
+        
+        if not actors:
+            return render(request, 'cinemaApp/add_movie.html', {'error': "At least one actor must be selected"})
+
+        
+        newId = uuid.uuid4()
+        
+        request_body = f"""
+            mutation {{
+                add_movie(_id: "{newId}", title: "{title}", director: "{director}", rating: {rating}, actors: {actors_json}) {{
+                    id
+                    title
+                    director
+                    rating
+                    actors {{
+                        id
+                    }}
+                }}
+            }}
+        """
+        response = call_graphql_service(port=3001, query=request_body)
+        response = response.json()
+        
+        if response.get('errors'):
+            return render(request, 'cinemaApp/add_movie.html', {'error': response['errors']})
+        
+        
+        return redirect('movies_list')
+    
+    return render(request, 'cinemaApp/add_movie.html', {'actors': all_actors['data']['actors']})
+
+def delete_movie_view(request, id):
+    query = f"""
+        mutation {{
+            delete_movie(_id: "{id}") {{
+                id
+            }}
+        }}
+    """
+    response = call_graphql_service(port=3001, query=query)
+    response = response.json()
+    
+    if response.get('errors'):
+        return render(request, 'cinemaApp/movie.html', {'movie': {'id': id}, 'error': response['errors']})
+    
+    return redirect('movies_list')
+
+# ACTORS$
+def list_actors_view(request):
+    request_body = """
+        {
+            actors {
+                id
+                firstname
+                lastname
+                birth_year
+            }
+        }
+    """
+    actors = call_graphql_service(port=3001, query=request_body)
+    actors = actors.json()
+    
+    return render(request, 'cinemaApp/actors.html', {'actors': actors['data']['actors']})
+
+def actor_detail_view(request, id):
+    request_body = f"""
+        {{
+            actor_with_id(_id: "{id}") {{
+                id
+                firstname
+                lastname
+                birth_year
+            }}
+        }}
+    """
+    actor = call_graphql_service(port=3001, query=request_body)
+    actor = actor.json()
+    
+    request_body = f"""
+        {{
+            actor_film_count(_id: "{id}")
+        }}
+    """
+    film_count = call_graphql_service(port=3001, query=request_body)
+    film_count = film_count.json()
+    
+    request_body = f"""
+        {{
+            movies_with_actor(actor_id: "{id}") {{
+                id
+                title
+            }}
+        }}
+    """
+    
+    movies = call_graphql_service(port=3001, query=request_body)
+    movies = movies.json()
+    
+    return render(request, 'cinemaApp/actor.html', {
+        'actor': actor['data']['actor_with_id'], 
+        'film_count': film_count, 
+        'movies': movies['data']['movies_with_actor']
+    })
 
 # SHOWTIMES
 def showtimes_view(request):

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actor Dashboard</title>
+</head>
+<body>
+    <h1></h1>
+    <h2>Informations personnelles</h2>
+    <p>Nom: {{ actor.lastname }}</p>
+    <p>Prénom: {{ actor.firstname }}</p>
+   
+    <h3>Historique des films</h3>
+    <ul>
+        {% for movie in movies %}
+            <li>{{ movie.title }}</li>
+        {% endfor %}
+    <br>
+    <br>
+    <a href="{% url 'actors_list' %}">Back to actors List</a>
+</body>
+</html>

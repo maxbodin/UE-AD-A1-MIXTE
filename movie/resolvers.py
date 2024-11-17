@@ -7,14 +7,12 @@ def movies(_, info):
         all_movies = json.load(file)
     return all_movies["movies"]
 
-
 def movie_with_id(_, info, _id):
     with open('./data/movies.json', "r") as file:
         all_movies = json.load(file)
         for movie in all_movies['movies']:
             if movie['id'] == _id:
                 return movie
-
 
 def movies_with_director(_, info, director):
     movies_array = []
@@ -24,7 +22,6 @@ def movies_with_director(_, info, director):
             if movie["director"] == director:
                 movies_array.append(movie)
     return movies_array
-
 
 def movies_with_actor(_, info, actor_id):
     with open("./data/actors.json", "r") as actors_file:
@@ -47,7 +44,6 @@ def movies_with_actor(_, info, actor_id):
 
     return movies_array
 
-
 def movies_above_rating(_, info, rating):
     movies_array = []
     with open("./data/movies.json", "r") as file:
@@ -57,7 +53,6 @@ def movies_above_rating(_, info, rating):
                 movies_array.append(movie)
     return movies_array
 
-
 def movie_with_title_exact(_, info, title):
     with open('./data/movies.json', "r") as file:
         all_movies = json.load(file)
@@ -65,7 +60,6 @@ def movie_with_title_exact(_, info, title):
             if movie['title'] == title:
                 return movie
     return None
-
 
 def movie_with_title_contains(_, info, title):
     movies_array = []
@@ -75,7 +69,6 @@ def movie_with_title_contains(_, info, title):
             if title.lower() in movie["title"].lower():
                 movies_array.append(movie)
     return movies_array
-
 
 def top_movies_by_director(_, info, director, count):
     with open("./data/movies.json", "r") as file:
@@ -93,14 +86,12 @@ def actors(_, info):
         all_actors = json.load(file)
     return all_actors["actors"]
 
-
 def actor_with_id(_, info, _id):
     with open('./data/actors.json', "r") as file:
         all_actors = json.load(file)
         for actor in all_actors['actors']:
             if actor['id'] == _id:
                 return actor
-
 
 def actor_film_count(_, info, _id):
     with open("./data/actors.json", "r") as file:
@@ -110,7 +101,6 @@ def actor_film_count(_, info, _id):
                 return len(actor.get("films", []))
     return 0
 
-
 def actors_by_lastname_contains(_, info, lastname):
     selected_actors = []
     with open("./data/actors.json", "r") as file:
@@ -119,7 +109,6 @@ def actors_by_lastname_contains(_, info, lastname):
             if actor["lastname"].lower() == lastname.lower():
                 selected_actors.append(actor)
     return selected_actors
-
 
 def actors_in_movie(_, info, movie_id):
     print("ACTORS_IN_MOVIE")
@@ -131,7 +120,6 @@ def actors_in_movie(_, info, movie_id):
                 selected_actors.append(actor)
 
     return selected_actors
-
 
 def update_movie_rate(_, info, _id, _rate):
     new_movies = {}
@@ -145,4 +133,55 @@ def update_movie_rate(_, info, _id, _rate):
                 new_movies = all_movies
     with open('./data/movies.json', "w") as write_file:
         json.dump(new_movies, write_file)
+    return new_movie
+
+def add_movie(_, info, _id, title, director, rating, actors):
+    new_movie = {
+        "id": _id,
+        "title": title,
+        "director": director,
+        "rating": rating
+    }
+    
+    with open('./data/movies.json', "r") as read_file:
+        all_movies = json.load(read_file)
+        all_movies["movies"].append(new_movie)
+        
+    with open('./data/movies.json', "w") as write_file:
+        json.dump(all_movies, write_file)
+        
+    with open('./data/actors.json', "r") as read_file:
+        all_actors = json.load(read_file)
+        for actor in actors:
+            for a in all_actors["actors"]:
+                if a["id"] == actor:
+                    a["films"].append(_id)
+                    
+    with open('./data/actors.json', "w") as write_file:
+        json.dump(all_actors, write_file)
+        
+    return new_movie
+
+def delete_movie(_, info, _id):
+    new_movies = {}
+    new_movie = {}
+    with open('./data/movies.json', "r") as read_file:
+        all_movies = json.load(read_file)
+        for movie in all_movies['movies']:
+            if movie['id'] == _id:
+                new_movie = movie
+                all_movies['movies'].remove(movie)
+                new_movies = all_movies
+    with open('./data/movies.json', "w") as write_file:
+        json.dump(new_movies, write_file)
+        
+    with open('./data/actors.json', "r") as read_file:
+        all_actors = json.load(read_file)
+        for actor in all_actors["actors"]:
+            if _id in actor["films"]:
+                actor["films"].remove(_id)
+    
+    with open('./data/actors.json', "w") as write_file:
+        json.dump(all_actors, write_file)
+        
     return new_movie

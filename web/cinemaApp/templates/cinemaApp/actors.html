@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movies Dashboard</title>
+    <title>Actors Dashboard</title>
 </head>
 <body>
     <header>
-        <h1>Movies Dashboard</h1>
+        <h1>Actors Dashboard</h1>
     </header>
 
     <!-- Afficher les erreurs -->
@@ -26,25 +26,23 @@
     {% if search_result %}  
         <h2>Résultats de la recherche :</h2>
             {% for search_result in search_result %}
-                <a href="{% url 'movie_detail' search_result.id %}">{{ search_result.title }}</a>
+                <a href="{% url 'actor_detail' search_result.id %}">{{ search_result.title }}</a>
             {% endfor %}
     {% endif %}
     <hr>
 
     <main>
         <section>
-            <h2>Movies List</h2>
+            <h2>Actors List</h2>
             <ul>
-                {% for movie in movies %}
+                {% for actor in actors %}
                     <li>
-                        <h3><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a></h3>
+                        <h3><a href="{% url 'actor_detail' actor.id %}">{{ actor.firstname }} {{ actor.lastname }}</a></h3>
                     </li>
                 {% endfor %}
             </ul>
         </section>
     </main>
-    <a href="{% url 'add_movie' %}">
-        <button>Add Movie</button>
-    </a>
+    
 </body>
 </html>
