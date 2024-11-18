@@ -35,6 +35,8 @@ query.set_field('actors_in_movie', r.actors_in_movie)
 mutation.set_field('update_movie_rate', r.update_movie_rate)
 mutation.set_field('add_movie', r.add_movie)
 mutation.set_field('delete_movie', r.delete_movie)
+mutation.set_field('add_actor', r.add_actor)
+mutation.set_field('delete_actor', r.delete_actor)
 
 # Création du schéma dit exécutable avec les éléments précédents.
 schema = make_executable_schema(type_defs, movie, query, mutation, actor)

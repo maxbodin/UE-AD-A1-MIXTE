@@ -18,6 +18,8 @@ type Mutation {
     add_movie(_id: String!, title: String!, director: String!, rating: Float!, actors: [String!]!): Movie!
     delete_movie(_id: String!): Movie!
     update_movie_rate(_id: String!, _rate: Float!): Movie
+    add_actor(firstname: String!, lastname: String!, birth_year: String!): Actor!
+    delete_actor(_id: String!): Actor!
 }
 
 type Movie {

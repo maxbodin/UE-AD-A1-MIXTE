@@ -274,6 +274,55 @@ def actor_detail_view(request, id):
         'movies': movies['data']['movies_with_actor']
     })
 
+def add_actor_view(request):
+    all_actors = call_graphql_service(port=3001, query="{ actors { id firstname lastname } }").json()
+    if request.method == 'POST':
+        
+        # ADD MOVIE
+        firstname = request.POST.get('firstname')
+        lastname = request.POST.get('lastname')
+        birth = request.POST.get('birth')
+        
+        if not firstname or not lastname or not birth:
+            return render(request, 'cinemaApp/add_movie.html', {'error': "All fields should be defined"})
+        
+        
+        request_body = f"""
+            mutation {{
+                add_actor(firstname: "{firstname}", lastname: "{lastname}", birth_year: "{str(birth)}") {{
+                    id,
+                    firstname,
+                    lastname
+                }}
+            }}
+        """
+        response = call_graphql_service(port=3001, query=request_body)
+        response = response.json()
+        
+        if response.get('errors'):
+            return render(request, 'cinemaApp/add_actor.html', {'error': response['errors']})
+        
+        
+        return redirect('actors_list')
+    
+    return render(request, 'cinemaApp/add_actor.html', {'actors': all_actors['data']['actors']})
+
+def delete_actor_view(request, id):
+    query = f"""
+        mutation {{
+            delete_actor(_id: "{id}") {{
+                id
+            }}
+        }}
+    """
+    response = call_graphql_service(port=3001, query=query)
+    response = response.json()
+    
+    if response.get('errors'):
+        return render(request, 'cinemaApp/actor.html', {'actor': {'id': id}, 'error': response['errors']})
+    
+    return redirect('actors_list')
+
 # SHOWTIMES
 def showtimes_view(request):
     request_body = """

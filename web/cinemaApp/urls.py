@@ -17,4 +17,6 @@ urlpatterns = [
     
     path("actors", views.list_actors_view, name="actors_list"),
     path("actors/<str:id>", views.actor_detail_view, name="actor_detail"),
-]
+    path("actors/add/", views.add_actor_view, name="add_actor"),
+    path("actors/delete/<str:id>", views.delete_actor_view, name="delete_actor")
+]   
