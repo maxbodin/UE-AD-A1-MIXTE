@@ -12,4 +12,11 @@ urlpatterns = [
     
     path("movies", views.list_movies_view, name="movies_list"),
     path("movies/<str:id>", views.movie_detail_view, name="movie_detail"),
-]
+    path('movies/add/', views.add_movie_view, name='add_movie'),
+    path('movies/delete/<str:id>', views.delete_movie_view, name='delete_movie'),
+    
+    path("actors", views.list_actors_view, name="actors_list"),
+    path("actors/<str:id>", views.actor_detail_view, name="actor_detail"),
+    path("actors/add/", views.add_actor_view, name="add_actor"),
+    path("actors/delete/<str:id>", views.delete_actor_view, name="delete_actor")
+]   
