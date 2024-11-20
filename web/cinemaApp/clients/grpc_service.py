@@ -48,7 +48,7 @@ def getBookingsOfUser(stub, userId):
         print(f"RPC Error: {e}")
 
 def call_grpc_service(server_address, functionToCall, **kwargs):
-    with grpc.insecure_channel(f'localhost:3005') as channel:
+    with grpc.insecure_channel(server_address) as channel:
         stubBooking = booking_pb2_grpc.BookingStub(channel)
         stubShowtime = showtime_pb2_grpc.ShowtimeStub(channel)
         
@@ -70,6 +70,7 @@ def call_grpc_service(server_address, functionToCall, **kwargs):
             if functionToCall == 'GetAllBookings':
                 print("GET ALL BOOKINGS")
                 response = getAllBookings(stubBooking)
+                print("response +> ", response)
                 
             elif functionToCall == 'GetBookingsOfUser':
                 print("GET BOOKINGS OF USER")

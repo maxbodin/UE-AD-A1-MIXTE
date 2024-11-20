@@ -43,7 +43,7 @@ def list_users_view(request):
 def user_detail_view(request, id):
     user = call_rest_service(3004, f'users/{id}', 'GET')
     print("BOOKINGS")
-    bookings = call_grpc_service('localhost:3005', 'GetBookingsOfUser', userId=id)
+    bookings = call_grpc_service('localhost:3002', 'GetBookingsOfUser', userId=id)
     for booking in bookings:
         booking['date'] = time.strftime('%d %B %Y', time.localtime(int(booking['date'])))
         for movie in booking['movies']:

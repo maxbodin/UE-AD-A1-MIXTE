@@ -4,7 +4,7 @@ import booking_pb2
 import booking_pb2_grpc
 import json
 
-BOOKING_PORT = 3005
+BOOKING_PORT = 3004
 
 
 class BookingServicer(booking_pb2_grpc.BookingServicer):
@@ -78,7 +78,7 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     booking_pb2_grpc.add_BookingServicer_to_server(BookingServicer(), server)
-    server.add_insecure_port(f'[::]:3005')
+    server.add_insecure_port(f'[::]:3002')
     server.start()
     server.wait_for_termination()
 

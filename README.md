@@ -34,3 +34,8 @@ python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. comm
 python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. booking.proto
 python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. showtime.proto
 ```
+# Description des services
+3004 -> USER
+3003 -> SHOWTIME
+3002 -> BOOKING
+3001 -> MOVIE
