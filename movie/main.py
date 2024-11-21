@@ -47,7 +47,7 @@ def home():
     return make_response("<h1 style='color:blue'>Welcome to the Movie service!</h1>", 200)
 
 
-# Graphql entry points
+# Point d'entrée
 @app.route('/graphql', methods=['POST'])
 def graphql_server():
     data = request.get_json()

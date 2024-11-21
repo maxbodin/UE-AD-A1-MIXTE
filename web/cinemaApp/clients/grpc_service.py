@@ -14,7 +14,6 @@ import showtime_pb2
 import common_pb2
 import common_pb2_grpc
 
-
 def getAllBookings(stub):
     all_bookings = []
     try:
@@ -46,7 +45,15 @@ def getBookingsOfUser(stub, userId):
     
     except grpc.RpcError as e:
         print(f"RPC Error: {e}")
+        
+def getAllShowtimes(stub):
+    try:
+        return stub.GetShowtimes(common_pb2.Empty(), timeout=10)
+    except grpc.RpcError as e:
+        print(f"RPC Error: {e}")
+        
 
+# Fonction permettant d'effectuer des requêtes gRPC
 def call_grpc_service(server_address, functionToCall, **kwargs):
     with grpc.insecure_channel(server_address) as channel:
         stubBooking = booking_pb2_grpc.BookingStub(channel)
@@ -61,11 +68,11 @@ def call_grpc_service(server_address, functionToCall, **kwargs):
             'GetAllShowtimes'
         ]
         
-        # Check if the function name is valid
+        # Vérification de la validité de la fonction à appeler
         if functionToCall not in case:
             raise ValueError(f"Invalid function name: {functionToCall}")
 
-        # Call the appropriate gRPC function with the correct request message
+        # Appel de la fonction correspondante
         try:
             if functionToCall == 'GetAllBookings':
                 print("GET ALL BOOKINGS")
@@ -86,11 +93,3 @@ def call_grpc_service(server_address, functionToCall, **kwargs):
             print(f"gRPC call failed: {e}")
             return None
         
-        
-
-        
-def getAllShowtimes(stub):
-    try:
-        return stub.GetShowtimes(common_pb2.Empty(), timeout=10)
-    except grpc.RpcError as e:
-        print(f"RPC Error: {e}")

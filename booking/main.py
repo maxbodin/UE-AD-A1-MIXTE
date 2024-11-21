@@ -14,6 +14,7 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
             self.db = json.load(jsf)["bookings"]
         print("Server started")
 
+    # Récupère toutes les réservations
     def GetAllBookings(self, request, context):
         print("GET ALL BOOKINGS")
         for booking in self.db:
@@ -40,10 +41,9 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
                 dates=datesList
             )
 
+    # Récupère les réservations d'un utilisateur 
     def GetBookingsOfUser(self, request, context):
         print("GET BOOKINGS OF USER")
-        print(self.db)
-        print(request.id)
         for booking in self.db:
             if booking["userid"] == request.id:
                 datesList = []
@@ -74,7 +74,7 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
             dates=[]
         )
 
-
+# Démarre le serveur
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     booking_pb2_grpc.add_BookingServicer_to_server(BookingServicer(), server)

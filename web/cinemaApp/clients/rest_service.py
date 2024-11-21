@@ -1,5 +1,6 @@
 import requests
 
+# Fonction permettant d'effectuer les requêtes REST
 def call_rest_service(port, endpoint, method='GET', data=None, headers=None):
     url = f'http://localhost:{port}/{endpoint}'  # Complete URL for the REST service
     headers = headers or {}

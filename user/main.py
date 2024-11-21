@@ -123,7 +123,7 @@ def get_user_movie_details(userid):
 
     user_id = selected_user['id']
 
-    # Fetch bookings from Booking service.
+    # Récupérer les réservations de l'utilisateur
     try:
         booking_response = requests.get(f'http://{HOST}:{BOOKING_PORT}/bookings/{user_id}')
         if booking_response.status_code != 200:
@@ -131,12 +131,10 @@ def get_user_movie_details(userid):
 
         bookings = booking_response.json()
 
-        # Fetch movie details for each movie in the bookings.
         movie_details = []
         for booking in bookings:
             for date_entry in booking['dates']:
                 for movie_id in date_entry['movies']:
-                    # Define the GraphQL query and inject the movie_id.
                     graphql_query = {
                         'query': f"""
                             query {{
@@ -149,14 +147,12 @@ def get_user_movie_details(userid):
                             """
                     }
 
-                    # Make the POST request to the GraphQL endpoint.
+                    # Récupérer les détails du film
                     movie_response = requests.post(f'http://{HOST}:{MOVIE_PORT}/graphql', json=graphql_query)
 
-                    # Process the response.
                     if movie_response.status_code == 200:
                         movie_data = movie_response.json()
                         print(movie_data)
-                        # Extract the movie data from the GraphQL response if available.
                         if "data" in movie_data and "movie_with_id" in movie_data["data"]:
                             movie_details.append(movie_data["data"]["movie_with_id"])
 
