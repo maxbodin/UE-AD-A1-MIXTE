@@ -25,17 +25,25 @@ cd web
 python3 manage.py runserver
 ```
 
+# Lancer les micro-services
+```bash
+python3 start-services.py
+```
+
 # Actualiser les contrats gRPC
 Ajouter les fichiers .proto dans `web/cinemaApp/clients/protos`
 ```bash
 cd web/cinemaApp/clients
-pip install -r requirements.txt # IF NECESSARY
+pip install -r requirements.txt # Si nécessaire
 python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. common.proto
 python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. booking.proto
 python3 -m grpc_tools.protoc -I=./protos --python_out=. --grpc_python_out=. showtime.proto
 ```
 # Description des services
 3004 -> USER
+<br>
 3003 -> SHOWTIME
+<br>
 3002 -> BOOKING
+<br>
 3001 -> MOVIE
