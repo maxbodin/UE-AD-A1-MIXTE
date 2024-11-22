@@ -335,6 +335,8 @@ def showtimes_view(request):
         # Handle unexpected response types
         raise ValueError(f"Unexpected response type: {type(showtimes_response).__name__}")
     print("SHOWTIMES => ", showtimes)
+    for s in showtimes:
+        s["date"] = time.strftime('%d %B %Y', time.localtime(int(s["date"])))
 
     # Render the template with the processed data
     return render(request, 'cinemaApp/showtimes.html', {'showtimes': showtimes})

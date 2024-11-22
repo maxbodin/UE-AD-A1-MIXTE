@@ -1,3 +1,4 @@
+import time
 import grpc
 from concurrent import futures
 import showtime_pb2
@@ -30,8 +31,8 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
             showtime_movies = []
             for movie in showtime['movies']:
                 movie_graphql = call_graphql_service(3001, f"{{ movie_with_id(_id: \"{movie['id']}\") {{ title }} }}").json()['data']['movie_with_id']
-                print("MOVIE of showtime", movie_graphql)
                 showtime_movies.append(common_pb2.ShowtimeMovieData(id=movie['id'], title=movie_graphql["title"], seatsMax=movie['seatsMax'], seatsBooked=movie['seatsBooked']))
+            
             yield common_pb2.ShowtimeData(date=showtime_date, movies=showtime_movies)
             
     def UpdateSeats(self, request, context):

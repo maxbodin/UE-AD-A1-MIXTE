@@ -10,35 +10,18 @@
         <h1>Sowtimes</h1>
     </header>
 
-    <!-- Afficher les erreurs -->
-    {% if error %}
-        <p style="color: red;">Error: {{ error }}</p>
-    {% endif %}
-
-    <!-- Barre de recherche -->
-    <form method="post" style="margin-bottom: 20px;">
-        {% csrf_token %}
-        <input type="text" name="search_query" placeholder="Rechercher un film..." value="{{ request.POST.search_query }}">
-        <button type="submit">Rechercher</button>
-    </form>
-
-    <!-- Afficher les résultats de la recherche si disponibles -->
-    {% if search_result %}  
-        <h2>Résultats de la recherche :</h2>
-            {% for search_result in search_result %}
-                <a href="{% url 'movie_detail' search_result.id %}">{{ search_result.title }}</a>
-            {% endfor %}
-    {% endif %}
-    <hr>
-
     <main>
         <section>
-            <h2>Movies List</h2>
+            <h2>Showtimes List</h2>
             <ul>
-                {% for movie in movies %}
-                    <li>
-                        <h3><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a></h3>
-                    </li>
+                {% for show in showtimes %}
+                        <h3>{{ show.date }}</h3>
+                        {% for movie in show.movies %}
+                            <p>{{ movie.title }}</p>
+                            <p>{{ movie.seatsBooked }} places restantes</p>
+                            <br>
+                        {% endfor %}
+
                 {% endfor %}
             </ul>
         </section>
