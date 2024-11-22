@@ -59,6 +59,18 @@ def getShowtimes(stub):
     except grpc.RpcError as e:
         print(f"RPC Error: {e}")
         
+def createBooking(stub, userId, date, movie, seats):
+    try:
+        booking = stub.CreateBooking(booking_pb2.CreateBookingData(
+            user=userId,
+            date = date,
+            movie = movie,
+            seats = seats
+        ))
+        return booking
+    except grpc.RpcError as e:
+        print(f"RPC Error: {e}")
+        
 
 # Fonction permettant d'effectuer des requêtes gRPC
 def call_grpc_service(server_address, functionToCall, **kwargs):
@@ -90,6 +102,14 @@ def call_grpc_service(server_address, functionToCall, **kwargs):
                 print("GET BOOKINGS OF USER")
                 userId = kwargs.get('userId')
                 response = getBookingsOfUser(stubBooking, userId)
+                
+            elif functionToCall == 'CreateBooking':
+                print("CREATE BOOKING")
+                userId = kwargs.get('userId')
+                date = kwargs.get('date')
+                movie = kwargs.get('movie')
+                seats = kwargs.get('seats')
+                response = createBooking(stubBooking, userId, date, movie, seats)
                 
             elif functionToCall == 'GetShowtimes':
                 print("GET ALL SHOWTIMES")

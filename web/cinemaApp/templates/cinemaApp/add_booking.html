@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Movie</title>
+</head>
+<body>
+    <h1>Add New Movie</h1>
+
+    {% if error %}
+        <p style="color: red;">Error: {{ error }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="seats">seats:</label>
+        <input type="text" id="seats" name="seats" required><br><br>
+
+        <label for="actors">Séance:</label><br>
+        {% for showtime in showtimes %}
+            <h3>{{ showtime.date }}</h3>
+            {% for movie in showtime.movies %}
+            <input type="radio" id="{{ showtime.date }}{{showtime.movie.id}}" name="movie" value="{{ showtime.date}}_{{movie.id}}">
+            <label for="movie_{{ movie.id }}_{{showtime.date}}">{{ movie.title }}</label><br>
+            {% endfor %}
+            {% endfor %}
+
+        <br>
+        <button type="submit">Book</button>
+    </form>
+
+    <br>
+    <a href="{% url 'user_detail' userId %}">Back to User View</a>
+</body>
+</html>

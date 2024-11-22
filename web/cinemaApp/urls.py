@@ -21,4 +21,6 @@ urlpatterns = [
     path("actors/delete/<str:id>", views.delete_actor_view, name="delete_actor"),
     
     path("showtimes", views.showtimes_view, name="showtimes_list"),
+    
+    path("bookings/add/<str:userid>", views.add_booking_view, name="add_booking"),
 ]   
