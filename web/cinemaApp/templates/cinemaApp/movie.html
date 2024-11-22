@@ -5,32 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Dashboard</title>
 </head>
-<body>
-    <header>
-        <h1>{{ movie.title }}</h1>
+<body style="margin: 0; font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333; padding: 20px; line-height: 1.6;">
+
+    <!-- Header Section -->
+    <header style="background-color: #34495e; color: white; padding: 20px; text-align: center; border-radius: 8px;">
+        <h1 style="margin: 0; font-size: 2.5rem;">{{ movie.title }}</h1>
     </header>
-    <form method="post" action="{% url 'delete_movie' movie.id %}" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" onclick="return confirm('Are you sure you want to delete this movie?');">Supprimer</button>
-    </form>
-    <main>
-        <section>
-            <ul>
+
+    <!-- Delete Movie Button -->
+    <div style="text-align: center; margin: 20px 0;">
+        <form method="post" action="{% url 'delete_movie' movie.id %}" style="display: inline;">
+            {% csrf_token %}
+            <button
+                type="submit"
+                onclick="return confirm('Are you sure you want to delete this movie?');"
+                style="padding: 10px 20px; background-color: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+                Supprimer
+            </button>
+        </form>
+    </div>
+
+    <!-- Main Content -->
+    <main style="padding: 20px;">
+        <!-- Movie Details Section -->
+        <section style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
+            <ul style="list-style: none; padding: 0;">
                 <li>
-                    <h3>{{ movie }}</h3>
+                    <h3 style="margin: 0; color: #2c3e50;">Details:</h3>
+                    <p style="margin-top: 10px; font-size: 1.2rem;">{{ movie }}</p>
                 </li>
             </ul>
         </section>
-        <section>
-            <h2>Casting</h2>
-            <ul>
+
+        <!-- Casting Section -->
+        <section style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Casting</h2>
+            <ul style="list-style: none; padding: 0; margin: 0;">
                 {% for actor in actors %}
-                    <li>{{ actor.firstname }} {{ actor.lastname }}</li>
+                    <li style="margin-bottom: 10px; background-color: #ecf0f1; padding: 10px; border-radius: 5px;">
+                        {{ actor.firstname }} {{ actor.lastname }}
+                    </li>
                 {% endfor %}
             </ul>
         </section>
     </main>
-    <a href="{% url 'movies_list' %}">
-        <button>Back to Movies List</button>
+
+    <!-- Back to Movies List Button -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a
+            href="{% url 'movies_list' %}"
+            style="text-decoration: none; padding: 10px 20px; background-color: #3498db; color: white; border-radius: 5px; font-size: 1rem; display: inline-block;">
+            Back to Movies List
+        </a>
+    </div>
 </body>
 </html>
