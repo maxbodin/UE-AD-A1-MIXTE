@@ -15,7 +15,7 @@
     </form>
     <h3>Historique des réservations</h3>
     <ul>
-        {% for date in bookings %}
+        {% for date in user.bookings %}
             <li>{{ date.date }}</li>
             {% for movieBooked in date.movies %}
                 <div>

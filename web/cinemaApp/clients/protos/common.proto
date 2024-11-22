@@ -4,5 +4,12 @@ message Empty {}
 
 message ShowtimeData {
     string date = 1;
-    repeated string movies = 2;
+    repeated ShowtimeMovieData movies = 2;
+}
+
+message ShowtimeMovieData {
+    string id = 1;
+    string title = 2;
+    int32 seatsMax = 3;
+    int32 seatsBooked = 4;
 }

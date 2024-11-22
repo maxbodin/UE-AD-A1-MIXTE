@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x63ommon.proto\"\x07\n\x05\x45mpty\",\n\x0cShowtimeData\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\x0e\n\x06movies\x18\x02 \x03(\tb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x63ommon.proto\"\x07\n\x05\x45mpty\"@\n\x0cShowtimeData\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\x12\"\n\x06movies\x18\x02 \x03(\x0b\x32\x12.ShowtimeMovieData\"U\n\x11ShowtimeMovieData\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x10\n\x08seatsMax\x18\x03 \x01(\x05\x12\x13\n\x0bseatsBooked\x18\x04 \x01(\x05\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,5 +34,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_EMPTY']._serialized_start=16
   _globals['_EMPTY']._serialized_end=23
   _globals['_SHOWTIMEDATA']._serialized_start=25
-  _globals['_SHOWTIMEDATA']._serialized_end=69
+  _globals['_SHOWTIMEDATA']._serialized_end=89
+  _globals['_SHOWTIMEMOVIEDATA']._serialized_start=91
+  _globals['_SHOWTIMEMOVIEDATA']._serialized_end=176
 # @@protoc_insertion_point(module_scope)

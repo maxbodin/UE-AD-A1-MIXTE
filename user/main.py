@@ -1,6 +1,9 @@
 # REST API
 import json
+import time
 import requests
+from clients.graphql_service import call_graphql_service
+from clients.grpc_service import call_grpc_service
 from flask import Flask, request, jsonify, make_response
 
 # CALLING gRPC requests
@@ -32,6 +35,13 @@ def get_users():
 def get_user(id_or_name):
     for user in users:
         if user['id'] == id_or_name or user['name'].lower() == id_or_name.lower():
+            bookings = call_grpc_service('localhost:3002', 'GetBookingsOfUser', userId=user['id'])
+            print(bookings)
+            for booking in bookings:
+                booking['date'] = time.strftime('%d %B %Y', time.localtime(int(booking['date'])))
+                for movie in booking['movies']:
+                    movie['movie'] = call_graphql_service(3001, f"{{ movie_with_id(_id: \"{movie['movieId']}\") {{ title }} }}").json()['data']['movie_with_id']['title']
+            user["bookings"] = bookings
             return make_response(jsonify(user), 200)
         
     return jsonify({"error": "User not found"}), 404
@@ -96,18 +106,6 @@ def get_user_bookings(userid):
 
     if not selected_user:
         return jsonify({"error": "User not found"}), 404
-
-    user_id = selected_user['id']
-    booking_service_url = f'http://localhost:3002/bookings/{user_id}'
-
-    try:
-        response = requests.get(booking_service_url)
-        if response.status_code == 200:
-            return jsonify(response.json()), 200
-        else:
-            return jsonify({"error": "Bookings not found for the user"}), 404
-    except requests.exceptions.RequestException as e:
-        return jsonify({"error": "Booking service is unavailable", "details": str(e)}), 500
 
 
 @app.route("/users/<userid>/movies", methods=['GET'])

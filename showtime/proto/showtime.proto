@@ -4,8 +4,20 @@ import "common.proto";
 service Showtime {
     rpc GetShowtimeByDate(ShowtimeDate) returns (ShowtimeData) {}
     rpc GetShowtimes(Empty) returns (stream ShowtimeData) {}
+    rpc UpdateSeats(UpdateSeatsInput) returns (UpdateSeatsResult) {}
 }
 
 message ShowtimeDate {
     string date = 1;
+}
+
+message UpdateSeatsInput {
+    int32 number = 1;
+    string date = 2;
+    string movie = 3;
+}
+
+message UpdateSeatsResult {
+    bool success = 1;
+    string message = 2;
 }

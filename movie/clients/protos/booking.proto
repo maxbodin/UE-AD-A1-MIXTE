@@ -1,0 +1,60 @@
+syntax = "proto3";
+import "common.proto";
+
+service Booking {
+  rpc GetAllBookings(Empty) returns (stream BookingData);
+  rpc GetBookingsOfUser(UserId) returns (BookingData);
+  rpc GetBookingsOfShowtime(ShowtimeData) returns (stream BookingData);
+  rpc CreateBooking(CreateBookingData) returns (CreateBookingResponse);
+  rpc DeleteBooking(DeleteBookingData) returns (DeleteBookingResponse);
+}
+
+message BookingData {
+  string userId = 1;
+  repeated DateData dates = 2;
+}
+
+message MovieData {
+  string movieId = 1;
+  int32 seatsBooked = 2;
+}
+
+message DateData {
+  string date = 1;
+  repeated MovieData moviesData = 2;
+}
+
+// PARAMS
+message UserId {
+  string id = 1;
+}
+
+message CreateBookingData {
+  string user = 1;
+  string date = 2;
+  string movie = 3;
+  int32 seats = 4;
+}
+
+message DeleteBookingData {
+  string user = 1;
+  string date = 2;
+  string movie = 3;
+  int32 seatsToDelete = 4;
+}
+
+// RESPONSES
+message CreateBookingResponse {
+  Response response = 1;
+  int32 remainingSeats = 2;
+}
+
+message DeleteBookingResponse {
+  Response response = 1;
+  int32 remainingSeats = 2;
+}
+
+message Response {
+  bool success = 1;
+  string message = 2;
+}
