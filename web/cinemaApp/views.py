@@ -2,8 +2,10 @@ import json
 import time
 import sys
 import uuid
+import re
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from google.protobuf.json_format import MessageToDict
 
 from cinemaApp.clients.graphql_service import call_graphql_service
 from cinemaApp.clients.rest_service import call_rest_service
@@ -44,13 +46,7 @@ def list_users_view(request):
 
 def user_detail_view(request, id):
     user = call_rest_service(3004, f'users/{id}', 'GET')
-    print("BOOKINGS")
-    bookings = call_grpc_service('localhost:3002', 'GetBookingsOfUser', userId=id)
-    for booking in bookings:
-        booking['date'] = time.strftime('%d %B %Y', time.localtime(int(booking['date'])))
-        for movie in booking['movies']:
-            movie['movie'] = call_graphql_service(3001, f"{{ movie_with_id(_id: \"{movie['movieId']}\") {{ title }} }}").json()['data']['movie_with_id']['title']
-    return render(request, 'cinemaApp/user.html', {'user': user, 'bookings': bookings})
+    return render(request, 'cinemaApp/user.html', {'user': user})
 
 def delete_user_view(request, id):
     # Make a DELETE request to the REST service to delete the user
@@ -325,19 +321,22 @@ def delete_actor_view(request, id):
 
 # SHOWTIMES
 def showtimes_view(request):
-    request_body = """
-        {
-            showtimes {
-                id
-                date
-                movies {
-                    id
-                    title
-                }
-            }
-        }
-    """
-    showtimes = call_graphql_service(port=3002, query=request_body)
-    showtimes = showtimes.json()
-    
-    return render(request, 'cinemaApp/showtimes.html', {'showtimes': showtimes['data']['showtimes']})
+    # Call the gRPC service
+    showtimes_response = call_grpc_service('localhost:3003', 'GetShowtimes')
+
+    # Check if the response is a list
+    if isinstance(showtimes_response, list):
+        # Convert each protobuf message to a dictionary
+        showtimes = [MessageToDict(message) for message in showtimes_response]
+    elif hasattr(showtimes_response, "DESCRIPTOR"):  # Single protobuf message
+        # Convert the single protobuf message to a dictionary
+        showtimes = MessageToDict(showtimes_response)
+    else:
+        # Handle unexpected response types
+        raise ValueError(f"Unexpected response type: {type(showtimes_response).__name__}")
+    print("SHOWTIMES => ", showtimes)
+    for s in showtimes:
+        s["date"] = time.strftime('%d %B %Y', time.localtime(int(s["date"])))
+
+    # Render the template with the processed data
+    return render(request, 'cinemaApp/showtimes.html', {'showtimes': showtimes})

@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 import common_pb2 as common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eshowtime.proto\x1a\x0c\x63ommon.proto\"\x1c\n\x0cShowtimeDate\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t\"?\n\x10UpdateSeatsInput\x12\x0e\n\x06number\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\x12\r\n\x05movie\x18\x03 \x01(\t\"5\n\x11UpdateSeatsResult\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\xa2\x01\n\x08Showtime\x12\x33\n\x11GetShowtimeByDate\x12\r.ShowtimeDate\x1a\r.ShowtimeData\"\x00\x12)\n\x0cGetShowtimes\x12\x06.Empty\x1a\r.ShowtimeData\"\x00\x30\x01\x12\x36\n\x0bUpdateSeats\x12\x11.UpdateSeatsInput\x1a\x12.UpdateSeatsResult\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0eshowtime.proto\x1a\x0c\x63ommon.proto\"\x1c\n\x0cShowtimeDate\x12\x0c\n\x04\x64\x61te\x18\x01 \x01(\t2j\n\x08Showtime\x12\x33\n\x11GetShowtimeByDate\x12\r.ShowtimeDate\x1a\r.ShowtimeData\"\x00\x12)\n\x0cGetShowtimes\x12\x06.Empty\x1a\r.ShowtimeData\"\x00\x30\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,10 +34,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_SHOWTIMEDATE']._serialized_start=32
   _globals['_SHOWTIMEDATE']._serialized_end=60
-  _globals['_UPDATESEATSINPUT']._serialized_start=62
-  _globals['_UPDATESEATSINPUT']._serialized_end=125
-  _globals['_UPDATESEATSRESULT']._serialized_start=127
-  _globals['_UPDATESEATSRESULT']._serialized_end=180
-  _globals['_SHOWTIME']._serialized_start=183
-  _globals['_SHOWTIME']._serialized_end=345
+  _globals['_SHOWTIME']._serialized_start=62
+  _globals['_SHOWTIME']._serialized_end=168
 # @@protoc_insertion_point(module_scope)
