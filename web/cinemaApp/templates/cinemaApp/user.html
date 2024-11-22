@@ -25,6 +25,8 @@
         {% endfor %}
     <br>
     <br>
+    <a href="{% url 'add_booking' user.id %}">Book a movie for {{ user.id }}</a>
+    <br>
     <a href="{% url 'users_list' %}">Back to Users List</a>
 </body>
 </html>

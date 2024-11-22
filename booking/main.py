@@ -4,6 +4,8 @@ import booking_pb2
 import booking_pb2_grpc
 import json
 
+from clients.grpc_service import call_grpc_service
+
 
 BOOKING_PORT = 3004
 
@@ -77,48 +79,42 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
 
     def CreateBooking(self, request, context):
         print("CREATE BOOKING")
+
+        all_showtimes = call_grpc_service("localhost:3003", "GetShowtimes")
+        print("ALL SHOWTIMES", all_showtimes)
         
-        showtime_service_url = f'http://localhost:3003/showtimes/{user_id}'
-
-        try:
-            response = requests.get(booking_service_url)
-            if response.status_code == 200:
-                return jsonify(response.json()), 200
-            else:
-                return jsonify({"error": "Bookings not found for the user"}), 404
-        except requests.exceptions.RequestException as e:
-            return jsonify({"error": "Booking service is unavailable", "details": str(e)}), 500
-
+        for date in all_showtimes:
+            if date.date == request.date:
+                for movie in date.movies:
+                    if movie.id == request.movie:
+                        print(request)
+                        print("MAX SEATS", movie.seatsMax) 
+                        print("BOOKED SEATS", movie.seatsBooked)
+                        if request.seats >= 0 :
+                            print('DONE')
+                            createBookingData = {
+                                "userid": request.user,
+                                "dates": [
+                                    {
+                                        "date": request.date,
+                                        "movies": [
+                                            {
+                                                "movieid": request.movie,
+                                                "seatsBooked": request.seats
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                            print("CREATE BOOKING DATA", createBookingData)
+                            self.db.append(createBookingData)
+                            with open('{}/data/bookings.json'.format("."), "w") as jsf:
+                                json.dump({"bookings": self.db}, jsf)
+                            return booking_pb2.CreateBookingResult(success=True, message="Booking created successfully.")
+                        else:
+                            return booking_pb2.CreateBookingResult(success=False, message="Invalid number of seats. Please enter a number between 0 and {}".format(movie.seatsMax - movie.seatsBooked))
         
-        new_booking = {
-            "userid": request.userId,
-            "dates": []
-        }
-
-        for dateEntry in request.dates:
-            new_date = {
-                "date": dateEntry.date,
-                "movies": []
-            }
-
-            for movieEntry in dateEntry.moviesData:
-                new_movie = {
-                    "movieid": movieEntry.movieId,
-                    "seatsBooked": movieEntry.seatsBooked
-                }
-                new_date["movies"].append(new_movie)
-
-            new_booking["dates"].append(new_date)
-
-        self.db.append(new_booking)
-
-        with open('{}/data/bookings.json'.format("."), "w") as jsf:
-            json.dump({"bookings": self.db}, jsf)
-
-        return booking_pb2.BookingResult(
-            success=True,
-            message="Booking created successfully"
-        )
+        
 
 # Démarre le serveur
 def serve():

@@ -340,3 +340,26 @@ def showtimes_view(request):
 
     # Render the template with the processed data
     return render(request, 'cinemaApp/showtimes.html', {'showtimes': showtimes})
+
+# BOOKINGS
+def add_booking_view(request, userid):
+    all_showtimes = call_grpc_service('localhost:3003', 'GetShowtimes')
+    
+    if request.method == 'POST':
+        showtime_id = request.POST.get('movie')
+        seats = request.POST.get('seats')
+        print("SHOWTIME ID => ", showtime_id)
+        print("SEATS => ", seats)
+        
+        if not showtime_id or not seats:
+            return render(request, 'cinemaApp/add_booking.html', {'showtimes': all_showtimes, 'error': "All fields should be defined"})
+        
+        date = showtime_id.split('_')[0]
+        movie_id = showtime_id.split('_')[1]
+        booking_response = call_grpc_service('localhost:3002', 'CreateBooking', user=userid, date=date, movie=movie_id, seats=int(seats))
+        
+        
+        
+        return redirect('user_detail', id=userid)
+    
+    return render(request, 'cinemaApp/add_booking.html', {'showtimes': all_showtimes, 'userId': userid})
